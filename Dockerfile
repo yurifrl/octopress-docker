@@ -1,9 +1,9 @@
-FROM jekyll/jekyll:stable
-MAINTAINER Jordon Bedwell <jordon@envygeeks.io>
+FROM jekyll/jekyll:pages
+MAINTAINER Yuri Freire <yurifreire@outlook.com>
 COPY copy /
 RUN \
   apk --update add readline-dev libxml2-dev libxslt-dev \
-    zlib-dev ruby-dev yaml-dev libffi-dev \
+    zlib-dev ruby-dev yaml-dev libffi-dev openssh \
       build-base git && \
 
   cd ~ && \
@@ -16,12 +16,12 @@ RUN \
     sed -r 's/^\s+//' > Gemfile && printf 'gem "octopress"\n\n' >> \
       Gemfile && \
 
-  rm -rf Gemfile.old && docker-helper add_gemfile_dependency $JEKYLL_VERSION && \
-  docker-helper copy_default_gems_to_gemfile && \
+  # rm -rf Gemfile.old && docker-helper add_gemfile_dependency $JEKYLL_VERSION && \
+  # docker-helper copy_default_gems_to_gemfile && \
 
   bundle install && bundle update && bundle clean --force && \
   apk del readline-dev libxml2-dev libxslt-dev zlib-dev \
-    ruby-dev yaml-dev libffi-dev build-base git && \
+    ruby-dev yaml-dev libffi-dev build-base && \
 
   rm -rf .editorconfig .git .gitattributes .gitignore .powrc .travis.yml \
     CHANGELOG.markdown README.markdown config.rb config.ru
